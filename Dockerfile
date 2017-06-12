@@ -7,3 +7,5 @@ RUN docker-php-ext-install pdo pdo_mysql gd curl
 RUN docker-php-ext-install mcrypt
 
 RUN a2enmod rewrite && service apache2 restart
+
+EXPOSE 80
