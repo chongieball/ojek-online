@@ -88,4 +88,22 @@ $container['logger'] = function(Container $container) {
     return $logger;
 };
 
-Veritrans_Config::$serverKey = 'VT-server-iqakMraboh1_d3iyStCmBNCS';
+$container["token"] = function ($container) {
+    return new StdClass;
+};
+
+$container['jwt'] = function (Container $container) {
+	$setting = $container->get('settings')['jwt'];
+	return new JwtAuthentication([
+		'path'			=> '/',
+		'passthrough'	=> ['/api/login', '/api/token', '/dump'],
+		'attribute'		=> 'token',
+		'secret'		=> $setting['token'],
+		'callback' 		=> function ($req, $res, $args) use ($container) {
+		            $container['token'] = $args['decoded'];
+		},
+	]);
+};
+
+Veritrans_Config::$serverKey = $container->get('settings')['payment-gateway']['server_key'];
+Veritrans_Config::$isProduction = $container->get('settings')['payment-gateway']['is_live'];
