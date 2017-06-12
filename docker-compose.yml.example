@@ -12,7 +12,7 @@ db:
     ports:
         - "3366:3306"
     environment:
-        MYSQL_ROOT_PASSWORD: root
+        MYSQL_ROOT_PASSWORD: password
         MYSQL_ROOT_HOST: php
         TZ: Asia/Jakarta
     volumes:

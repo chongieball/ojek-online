@@ -16,7 +16,7 @@ return [
 
 	//setting db (with doctrine)
 	'db'	=> [
-		'url'	=> 'mysql://root:root@db/elearning',
+		'url'	=> 'mysql://root:root@db/database',
 	],
 
 	'determineRouteBeforeAppMiddleware' => true,
@@ -33,8 +33,8 @@ return [
 		'smtp_auth' 	=> true,
 		'smtp_secure'	=> 'tls',
 		'host'			=> 'smtp.gmail.com',
-		'username'		=> 'mitschools121@gmail.com',
-		'password'		=> 'mitschool123',
+		'username'		=> 'mail@gmail.com',
+		'password'		=> 'password',
 		'port'			=> 587,
 		'html'			=> true,
 		'name'			=> 'MIT School',
