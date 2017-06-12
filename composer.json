@@ -16,6 +16,7 @@
         "monolog/monolog": "^1.22",
         "siriusphp/validation": "^2.2",
         "siriusphp/upload": "^2.1",
+        "tuupola/slim-jwt-auth": "^2.3",
         "veritrans/veritrans-php": "dev-snap"
     },
 
