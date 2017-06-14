@@ -4,9 +4,9 @@ namespace App\Repositories\Contracts;
 
 interface RepositoriesInterface
 {
-	public function getAll();
-	public function create(array $data);
-	public function update(array $data, $column = null, $value = null);
-	public function findBy($column, $value = null, $operator = '=');
-	public function delete($column, $value, $name = 'soft');
+	public function getAll($model);
+	public function create($model, array $data);
+	public function update($model, array $data, $column, $value);
+	public function findBy($model, $column, $value, $operator = '=', $fetchAll = false, $deleted = null);
+	public function delete($model, $column, $value, $name = 'soft');
 }

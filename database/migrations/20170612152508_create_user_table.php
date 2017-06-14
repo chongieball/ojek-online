@@ -31,14 +31,14 @@ class CreateUserTable extends AbstractMigration
         $users->addColumn('username', 'string')
               ->addColumn('email', 'string')
               ->addColumn('name', 'string')
-              ->addColumn('phone', 'string', ['null' => true])
+              ->addColumn('phone', 'string')
               ->addColumn('password', 'string')
               ->addColumn('photo', 'string', ['default' => 'default_user.png'])
               ->addColumn('create_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
               ->addColumn('update_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP'])
               ->addColumn('is_active', 'integer', ['default' => 0])
               ->addColumn('deleted', 'integer', ['default' => 0])
-              ->addIndex(['email'])
+              ->addIndex(['username', 'email'])
               ->create();
     }
 }
