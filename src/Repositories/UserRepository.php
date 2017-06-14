@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Users\User;
 use App\Models\Users\UserRole;
 use App\Models\Users\ActivateUser;
+use App\Models\Users\ResetPassword;
 
 class UserRepository extends BaseRepository
 {
@@ -103,5 +104,57 @@ class UserRepository extends BaseRepository
 		$findUser['role'] = $this->findBy($role, 'user_id', $findUser['id'])['role_id'];
 
 		return $findUser;
+	}
+
+	public function resetPassword($email)
+	{
+		$findUser = $this->findUser('email', $email);
+		if (!$findUser) {
+			return false;
+		}
+
+		$reset = new ResetPassword;
+
+		$resetPass = $reset->resetPass($findUser['id']);
+
+		$findUser['token'] = $this->findBy($reset, 'user_id', $findUser['id'])['token'];
+
+		return $findUser;
+	}
+
+	public function checkResetToken($token)
+	{
+		$reset = new ResetPassword;
+
+		$find = $this->findBy($reset, 'token', $token);
+
+		if (!$find || $find['expire_at'] < date('Y-m-d H:i:s')) {
+			return false;
+		}
+
+		return $find;
+	}
+
+	public function renewPassword($token, $password)
+	{
+		$reset = new ResetPassword;
+
+		$check = $this->checkResetToken($token);
+
+		if (!$check) {
+			return false;
+		}
+
+		$user = new User;
+
+		$data = [
+			'password'	=> password_hash($password, PASSWORD_DEFAULT),
+		];
+
+		$this->update($user, $data, 'id', $check['user_id']);
+
+		$this->delete($reset, 'user_id', $check['user_id'], $name = 'hard');
+
+		return true;
 	}
 }

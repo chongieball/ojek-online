@@ -8,6 +8,29 @@ use Firebase\JWT\JWT;
 
 class UserController extends \App\Controllers\BaseController
 {
+    private function setJwt($dataUser)
+    {
+        $getJwtToken = $this->container->get('settings')['jwt']['token'];
+
+        $jti = base64_encode($getJwtToken);
+        $now = new \DateTime();
+        $future = new \DateTime("now +2 day");
+        $payload = [
+            "iat" => $now->getTimeStamp(),
+            "exp" => $future->getTimeStamp(),
+            "jti" => $jti,
+            'data'=> [
+                'id'    => $dataUser['id'],
+                'name'  => $dataUser['name'],
+            ],
+        ];
+
+        $secret = $getJwtToken;
+        $token = JWT::encode($payload, $secret);
+
+        return $token;
+    }
+
     public function register(Request $request, Response $response)
     {
         $post = $request->getParams();
@@ -125,26 +148,78 @@ class UserController extends \App\Controllers\BaseController
         return $this->responseDetail("Login Success", 200, $login);
     }
 
-    private function setJwt($dataUser)
+    public function resetPassword(Request $request, Response $response)
     {
-        $getJwtToken = $this->container->get('settings')['jwt']['token'];
+        $userRepo = new \App\Repositories\UserRepository;
 
-        $jti = base64_encode($getJwtToken);
-        $now = new \DateTime();
-        $future = new \DateTime("now +2 day");
-        $payload = [
-            "iat" => $now->getTimeStamp(),
-            "exp" => $future->getTimeStamp(),
-            "jti" => $jti,
-            'data'=> [
-                'id'    => $dataUser['id'],
-                'name'  => $dataUser['name'],
+        $rule = [
+            'required' => [
+                ['email'],
             ],
         ];
 
-        $secret = $getJwtToken;
-        $token = JWT::encode($payload, $secret);
+        $this->validator->rules($rule);
 
-        return $token;
+        if ($this->validator->validate()) {
+            $reset = $userRepo->resetPassword($request->getParam('email'));
+
+            if (!$reset) {
+                return $this->responseDetail("Email is not registered", 400);
+            }
+
+            $this->mailer->send('templates/mailer/reset_pass.twig', ['user' => $reset], function($message) use ($reset, $request) {
+                        $message->to($request->getParam('email'));
+                        $message->subject('Reset Your Password');
+                });
+
+            return $this->responseDetail("Reset Password Success", 201);
+        } else {
+            return $this->responseDetail("Error", 400, $this->validator->errors());
+        }
+    }
+
+    public function getRenewPassword(Request $request, Response $response)
+    {
+        $userRepo = new \App\Repositories\UserRepository;
+
+        $find = $userRepo->checkResetToken($request->getQueryParam('token'));
+
+        if (!$find) {
+            return $this->responseDetail("Token not found", 404);
+        }
+
+        return $this->responseDetail("Data Available", 200);
+    }
+
+    public function putRenewPassword(Request $request, Response $response)
+    {
+        $userRepo = new \App\Repositories\UserRepository;
+
+        $rule = [
+            'required' => [
+                ['password'],
+                ['retype_password'],
+            ],
+            'lengthMin' => [
+                ['password', 6],
+            ],
+            'equals' => [
+                ['retype_password', 'password']
+            ],
+        ];
+
+        $this->validator->rules($rule);
+
+        if ($this->validator->validate()) {
+            $renew = $userRepo->renewPassword($request->getQueryParam('token'), $request->getParam('password'));
+
+            if (!$renew) {
+                return $this->responseDetail('Something Wrong', 400);
+            }
+
+            return $this->responseDetail('Success Renew Password', 200);
+        } else {
+            return $this->responseDetail('Error', 400, $this->validator->errors());
+        }
     }
 }
