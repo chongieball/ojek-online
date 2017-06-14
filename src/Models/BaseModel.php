@@ -89,7 +89,7 @@ abstract class BaseModel
      * @param  string $value  value
      * @return this model
      */
-    public function find($column, $value = null, $operator = '=')
+    public function find($column, $value, $operator = '=')
     {
         $param = ':'.$column;
         $qb = $this->getBuilder();
@@ -113,22 +113,22 @@ abstract class BaseModel
     }
 
     public function fetchAll()
-	{
-		return $this->query->execute()->fetchAll();
-	}
+  {
+    return $this->query->execute()->fetchAll();
+  }
 
-	public function fetch()
-	{
-		return $this->query->execute()->fetch();
-	}
+  public function fetch()
+  {
+    return $this->query->execute()->fetch();
+  }
 
-	//find data with delete = 0
-	public function withoutDelete()
-	{
-		$this->query = $this->query->andWhere('deleted = 0');
+  //find data with delete = 0
+  public function withoutDelete()
+  {
+    $this->query = $this->query->andWhere('deleted = 0');
 
-		return $this;
-	}
+    return $this;
+  }
 
     //find data with delete = 1
     public function withDelete()
@@ -138,12 +138,12 @@ abstract class BaseModel
         return $this;
     }
 
-	/**
-	 * Create New Data
-	 * @param  array  $data column and value
-	 * @return int id rows
-	 */
-	public function create(array $data)
+  /**
+   * Create New Data
+   * @param  array  $data column and value
+   * @return int id rows
+   */
+  public function create(array $data)
     {
         $column = [];
         $paramData = [];
@@ -232,16 +232,23 @@ abstract class BaseModel
      * @return $this->create() if data doesn't exist
      */
     public function checkOrCreate(array $data)
-    {
-        foreach ($data as $key => $value) {
-            if (is_array($this->check) && in_array($key, $this->check)) {
-                $check = $this->find($key, $value)->fetch();
-                if ($check)
-                {
-                    return ucfirst($key);
+    {   
+        if ($this->check) {
+            foreach ($data as $key => $value) {
+                if (is_array($this->check) && in_array($key, $this->check)) {
+                    $check = $this->find($key, $value)->fetch();
+                    if ($check)
+                    {
+                        $error[] = ucfirst($key);
+                    }
                 }
             }
+
+            if ($error) {
+              return $error;
+            }
         }
+
         return $this->create($data);
     }
 
@@ -259,15 +266,19 @@ abstract class BaseModel
 
         $qb = $this->getBuilder();
         $qb->select($this->column)->from($this->table);
-        foreach ($data as $key => $value) {
-            $columns[$key] = ':'.$key;
-            $paramData[$key] = $value;
 
-            if (is_array($this->check) && in_array($key, $this->check)) {
-                $qb->andWhere($key.'='.$columns[$key])
-                   ->setParameter($columns[$key], $value);
+        if ($this->check) {
+            foreach ($data as $key => $value) {
+                $columns[$key] = ':'.$key;
+                $paramData[$key] = $value;
+
+                if (is_array($this->check) && in_array($key, $this->check)) {
+                    $qb->orWhere($key.'='.$columns[$key])
+                       ->setParameter($columns[$key], $value);
+                }
             }
         }
+
         $check = $qb->execute()->fetch();
 
         if ($check) {
@@ -281,17 +292,23 @@ abstract class BaseModel
 
     public function checkOrUpdate(array $data, $column, $value)
     {
-        foreach ($data as $key => $values) {
-            if (is_array($this->check) && in_array($key, $this->check)) {
-                $check = $this->find($key, $values)->fetch();
-                if ($check)
-                {
-                    return ucfirst($key);
+        if ($this->check) {
+            foreach ($data as $key => $values) {
+                if (is_array($this->check) && in_array($key, $this->check)) {
+                    $check = $this->find($key, $values)->fetch();
+                    if ($check)
+                    {
+                        $error[] = $key;
+                    }
                 }
             }
         }
+
+        if ($error) {
+          return $error;
+        }
+        
         $this->update($data, $column, $value);
-        return $this->find($column, $value)->fetch();
     }
 
     public function ascSort($column)

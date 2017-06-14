@@ -5,6 +5,7 @@ use Slim\Views\Twig as View;
 use Slim\Views\TwigExtension as ViewExt;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Slim\Middleware\JwtAuthentication;
 
 $container = $app->getContainer();
 
@@ -95,14 +96,22 @@ $container["token"] = function ($container) {
 $container['jwt'] = function (Container $container) {
 	$setting = $container->get('settings')['jwt'];
 	return new JwtAuthentication([
-		'path'			=> '/',
-		'passthrough'	=> ['/api/login', '/api/token', '/dump'],
+		'path'			=> '/api',
+		'passthrough'	=> ['/', '/login', '/register'],
 		'attribute'		=> 'token',
 		'secret'		=> $setting['token'],
 		'callback' 		=> function ($req, $res, $args) use ($container) {
 		            $container['token'] = $args['decoded'];
 		},
 	]);
+};
+
+$container['sms'] = function (Container $container) {
+	$setting = $container->get('settings')['sms-gateway'];
+
+	$sms = new \App\Extensions\Sms\SmsHandler($setting['user_key'], $setting['pass_key']);
+
+	return $sms;
 };
 
 Veritrans_Config::$serverKey = $container->get('settings')['payment-gateway']['server_key'];
