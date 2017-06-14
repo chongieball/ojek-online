@@ -55,4 +55,10 @@ return [
 		'server_key'=> 'your_server_key',
 		'is_live'	=> false, 
 	],
+
+	//setting zenviva sms
+	'sms-gateway'	=> [
+		'user_key'	=> 'your_user_key',
+		'pass_key'	=> 'your_pass_key',
+	],
 ];

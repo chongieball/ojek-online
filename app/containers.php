@@ -106,5 +106,13 @@ $container['jwt'] = function (Container $container) {
 	]);
 };
 
+$container['sms'] = function (Container $container) {
+	$setting = $container->get('settings')['sms-gateway'];
+
+	$sms = new \App\Extensions\Sms\SmsHandler($setting['user_key'], $setting['pass_key']);
+
+	return $sms;
+};
+
 Veritrans_Config::$serverKey = $container->get('settings')['payment-gateway']['server_key'];
 Veritrans_Config::$isProduction = $container->get('settings')['payment-gateway']['is_live'];
