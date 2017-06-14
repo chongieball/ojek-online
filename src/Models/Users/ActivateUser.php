@@ -12,7 +12,7 @@ class ActivateUser extends \App\Models\BaseModel
     	$data = [
     		'user_id'	=> $userId,
     		'token'		=> substr(md5(openssl_random_pseudo_bytes(12)), 9, 4),
-    		'expire_at'	=> date('Y-m-d H:i:s', strtotime('+2 day')),
+    		'expire_at'	=> date('Y-m-d H:i:s', strtotime('+5 minutes')),
     	];
 
     	$this->create($data);

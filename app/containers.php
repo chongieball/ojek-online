@@ -5,7 +5,6 @@ use Slim\Views\Twig as View;
 use Slim\Views\TwigExtension as ViewExt;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use Slim\Middleware\JwtAuthentication;
 
 $container = $app->getContainer();
 
@@ -91,19 +90,6 @@ $container['logger'] = function(Container $container) {
 
 $container["token"] = function ($container) {
     return new StdClass;
-};
-
-$container['jwt'] = function (Container $container) {
-	$setting = $container->get('settings')['jwt'];
-	return new JwtAuthentication([
-		'path'			=> '/api',
-		'passthrough'	=> ['/', '/login', '/register'],
-		'attribute'		=> 'token',
-		'secret'		=> $setting['token'],
-		'callback' 		=> function ($req, $res, $args) use ($container) {
-		            $container['token'] = $args['decoded'];
-		},
-	]);
 };
 
 $container['sms'] = function (Container $container) {
