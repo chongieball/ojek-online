@@ -1,0 +1,27 @@
+{% if login.role == 1%}
+	{% set skin = 'skin-red-light' %}
+{% elseif login.role == 2 %}
+	{% set skin = 'skin-purple-light' %}
+{% else %}
+    {% set skin = 'skin-blue-light' %}
+{% endif %}
+
+{% extends 'template.twig' %}
+{% block body %}
+    <body class="hold-transition {{skin}} sidebar-collapse sidebar-mini">
+		<div class="wrapper">
+			<header class="main-header">
+				{% include 'partials/menu.twig' %}
+			</header>
+			<aside class="main-sidebar">
+		    	<section class="sidebar">
+		            {% include 'partials/sidebar.twig'%}
+		        </section>
+	    	</aside>
+	    	<div class="content-wrapper">
+	        <section class="content">
+	            {% block content %} {% endblock %}
+	        </section>
+		</div>
+	</body> 
+{% endblock %}

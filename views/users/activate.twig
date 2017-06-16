@@ -1,0 +1,35 @@
+{% extends 'template.twig' %}
+
+{% block title %}ChongieJek - Activate Account{% endblock %}
+
+{% block body %}
+<body class="hold-transition register-page">
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="#">Chongie<b>Jek</b></a>
+        </div>
+        <div class="register-box-body">
+            <p class="login-box-msg">Activate Your Account</p>
+            {% include 'templates/flash/flash.twig' %}
+            <form method="post">
+                <div class="form-group has-feedback {{ errors.token ? 'has-error': '' }}">
+                    <input type="text" class="form-control" placeholder="Your Token" name="token" value="{{ old.token }}">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    {% if errors.token %}
+                        <span class="help-block">{{ errors.token | first }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4 col-xs-offset-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Activate</button>
+                    </div>
+                </div>
+            </form>
+            <a href="{#{ path_for('web.user.login') }#}" class="text-center pull-left">Resend Code</a>
+            <a href="{{ path_for('web.login') }}" class="text-center pull-right">To Login Page</a>
+            <br>
+        </div>
+    </div>
+</body>
+{% endblock %}

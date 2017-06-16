@@ -62,9 +62,13 @@ class UserController extends \App\Controllers\BaseController
                 return $this->responseDetail('Error', 400, $register['errors']);
             }
 
-            $this->sms->to($register['phone'])
-                      ->message('Your Activation Code is '.$register['token'])
-                      ->send();
+            $sendSms = $this->sms->to($register['phone'])
+                        ->message('Please input this code for activate your account '.$register['token'].'. Expire in 5 minutes')
+                        ->send();
+
+            if (!$sendSms) {
+               return $this->responseDetail("Something Wrong", 500); 
+            }
 
             return $this->responseDetail("Register Success", 201, $register);
         }  else {
@@ -124,7 +128,7 @@ class UserController extends \App\Controllers\BaseController
             }
 
             $this->sms->to($resend['phone'])
-                          ->message('Your Activation Code is '.$register['token'])
+                          ->message('Please input this code for activate your account '.$resend['token'].'. Expire in 5 minutes')
                           ->send();
 
             return $this->responseDetail("Success resend code", 200);

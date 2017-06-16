@@ -1,0 +1,36 @@
+{% extends 'template.twig' %}
+
+{% block title %}ChongieJek - Register{% endblock %}
+{% block body %}
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="#">Chongie<b>Jek</b></a>
+        </div>
+        <div class="login-box-body">
+            <p class="login-box-msg">Sign in to Account</p>
+            {% include 'templates/flash/flash.twig' %}
+            <form method="post">
+                <div class="form-group has-feedback {{ errors.username ? 'has-error': '' }}">
+                    <input type="text" name="username" class="form-control" placeholder="Username" value="{{ old.username }}">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    {% if errors.username %}
+                        <span class="help-block">{{ errors.username | first }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" placeholder="Password" name="password">
+                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4 col-xs-offset-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    </div>
+                </div>
+            </form>
+            <a href="{{ path_for('web.register') }}" class="text-center">Register a new membership</a>
+            <a class="pull-right" href="{{ path_for('web.reset.password') }}" class="text-center">Forgot Password</a>
+        </div>
+    </div>
+</body>
+{% endblock %}

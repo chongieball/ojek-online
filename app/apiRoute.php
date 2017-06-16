@@ -14,4 +14,8 @@ $app->group('/api', function() use ($app,$container) {
 	$app->get('/renew-password', 'App\Controllers\Api\UserController:getRenewPassword')->setName('api.get.renew.password');
 
 	$app->put('/renew-password', 'App\Controllers\Api\UserController:putRenewPassword')->setName('api.put.renew.password');
+
+	$app->post('/test', function ($req, $res){
+		var_dump($req->getParams());
+	})->setName('api.test');
 });

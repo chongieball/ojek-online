@@ -88,6 +88,8 @@ class UserRepository extends BaseRepository
 
 		$this->update($activate, $data, 'user_id', $findUser['id']);
 
+		$findUser['token'] = $this->findBy($activate, 'user_id', $register)['token'];
+
 		return $findUser;
 	}
 
