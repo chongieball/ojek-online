@@ -34,7 +34,7 @@ $container['view'] = function (Container $container) {
 
 	$view->getEnvironment()->addGlobal('flash', $container->flash);
 
-	$view->getEnvironment()->addGlobal('baseUrl', $container->request->getUri()->getHost());
+	$view->getEnvironment()->addGlobal('baseUrl', $container->request->getUri()->getHost().':'.$container->request->getUri()->getPort());
 
 	if (isset($_SESSION['login'])) {
         $view->getEnvironment()->addGlobal('login', $_SESSION['login']);

@@ -2,11 +2,8 @@
 {% block content %}
 	<div class="row">
 	    <p>
-	    Your request to reset password is accepted. Please remember your password carefully
-	    {{data.user.token}}
-	    		<!-- <a href="{#{baseUrl}}{{path_for('web.user.renew.password')}}?token={{data.token}#}">
-		    		<button class="btn btn-info text-center">Reset Password</button>
-		    	</a> -->
-	    	</p>
-	    </div> 
-	{% endblock %}
+	    	Your request to reset password is accepted. Please remember your password carefully. Please click this link <br>
+	    	http://{{baseUrl}}{{path_for('web.renew.password')}}
+	    </p>
+	</div> 
+{% endblock %}

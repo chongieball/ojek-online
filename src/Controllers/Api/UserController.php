@@ -22,11 +22,12 @@ class UserController extends \App\Controllers\BaseController
             'data'=> [
                 'id'    => $dataUser['id'],
                 'name'  => $dataUser['name'],
+                'role'  => $dataUser['role'],
             ],
         ];
 
         $secret = $getJwtToken;
-        $token = JWT::encode($payload, $secret);
+        $token = JWT::encode($payload, $secret, 'HS256');
 
         return $token;
     }
@@ -67,16 +68,17 @@ class UserController extends \App\Controllers\BaseController
                         ->send();
 
             if (!$sendSms) {
-               return $this->responseDetail("Something Wrong", 500); 
+                $userRepo->clear($register['id']);
+                return $this->responseDetail("Something Wrong", 500); 
             }
 
-            return $this->responseDetail("Register Success", 201, $register);
+            return $this->responseDetail("Register Success! We'll send you activation code to your number", 201, $register);
         }  else {
             return $this->responseDetail("Error", 400, $this->validator->errors());
         }
     }
 
-    public function activate(Request $request, Response $response)
+    public function activation(Request $request, Response $response)
     {
         $rule = [
             'required' => [
@@ -94,7 +96,7 @@ class UserController extends \App\Controllers\BaseController
             $activate = $userRepo->activate($token);
 
             if (!$activate) {
-                return $this->responseDetail("Token not found or expired", 400);
+                return $this->responseDetail("Token not Found or Expired", 400);
             }
 
             $this->mailer->send('templates/mailer/activate.twig', ['user' => $activate], function($message) use ($activate) {
@@ -102,7 +104,7 @@ class UserController extends \App\Controllers\BaseController
                         $message->subject('Your Account is Active');
                 });
 
-            return $this->responseDetail("Your account has been activated", 200);
+            return $this->responseDetail("Your Account has been Activated", 200);
         } else {
             return $this->responseDetail("Error", 400, $this->validator->errors());
         }
@@ -110,31 +112,23 @@ class UserController extends \App\Controllers\BaseController
 
     public function resendCode(Request $request, Response $response)
     {
-        $rule = [
-            'required' => [
-                ['username'],
-            ],
-        ];
+        $userRepo = new \App\Repositories\UserRepository;
 
-        $this->validator->rules($rule);
+        $resend = $userRepo->resendCode($request->getParam('username'));
 
-        if ($this->validator->validate()) {
-            $userRepo = new \App\Repositories\UserRepository;
-
-            $resend = $userRepo->resendCode($request->getParam('username'));
-
-            if (!$resend) {
-                return $this->responseDetail("Wrong Username", 400);
-            }
-
-            $this->sms->to($resend['phone'])
-                          ->message('Please input this code for activate your account '.$resend['token'].'. Expire in 5 minutes')
-                          ->send();
-
-            return $this->responseDetail("Success resend code", 200);
-        } else {
-            return $this->responseDetail("Error", 400, $this->validator->errors());
+        if (!$resend) {
+            return $this->responseDetail("Something Wrong, Please Try Again", 400);
         }
+
+        $sendSms = $this->sms->to($resend['phone'])
+                    ->message('Please input this code for activate your account '.$resend['token'].'. Expire in 5 minutes')
+                    ->send();
+
+        if (!$sendSms) {
+            return $this->responseDetail("Something Wrong", 500);
+        }
+
+        return $this->responseDetail("Success Resend Code, We'll send you activation code to your number", 200);
     }
 
     public function login(Request $request, Response $response)
@@ -176,7 +170,7 @@ class UserController extends \App\Controllers\BaseController
                         $message->subject('Reset Your Password');
                 });
 
-            return $this->responseDetail("Reset Password Success", 201);
+            return $this->responseDetail("Reset Password Success, We'll Send You Email", 201);
         } else {
             return $this->responseDetail("Error", 400, $this->validator->errors());
         }
@@ -189,7 +183,7 @@ class UserController extends \App\Controllers\BaseController
         $find = $userRepo->checkResetToken($request->getQueryParam('token'));
 
         if (!$find) {
-            return $this->responseDetail("Token not found", 404);
+            return $this->responseDetail("Token not Found or Expired, Please Try Again", 404);
         }
 
         return $this->responseDetail("Data Available", 200);
@@ -221,7 +215,7 @@ class UserController extends \App\Controllers\BaseController
                 return $this->responseDetail('Something Wrong', 400);
             }
 
-            return $this->responseDetail('Success Renew Password', 200);
+            return $this->responseDetail('Success Renew Password, Please Login', 200);
         } else {
             return $this->responseDetail('Error', 400, $this->validator->errors());
         }

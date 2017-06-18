@@ -6,7 +6,7 @@ $app->post('/register', 'App\Controllers\Web\UserController:postRegister');
 $app->get('/activation', 'App\Controllers\Web\UserController:getActivation')->setName('web.activation');
 $app->post('/activation', 'App\Controllers\Web\UserController:postActivation');
 
-$app->get('/resend-code', 'App\Controllers\Web\UserController:getResendCode')->setName('web.resend.code');
+$app->get('/resend-code', 'App\Controllers\Web\UserController:resendCode')->setName('web.resend.code');
 
 $app->get('/reset-password', 'App\Controllers\Web\UserController:getResetPassword')->setName('web.reset.password');
 $app->post('/reset-password', 'App\Controllers\Web\UserController:postResetPassword');
@@ -16,3 +16,17 @@ $app->post('/renew-password', 'App\Controllers\Web\UserController:postRenewPassw
 
 $app->get('/login', 'App\Controllers\Web\UserController:getLogin')->setName('web.login');
 $app->post('/login', 'App\Controllers\Web\UserController:postLogin');
+
+$app->get('/logout', 'App\Controllers\Web\UserController:logout')->setName('web.logout');
+
+$app->group('', function() use ($app, $container) {
+	$app->get('/', 'App\Controllers\Web\UserController:home')->setName('web.home');
+
+	$app->group('/driver', function() use ($app, $container) {
+		$app->get('/', 'App\Controllers\Web\DriverController:home')->setName('web.driver.home');
+	});
+
+	$app->group('/admin', function() use ($app, $container) {
+		$app->get('/', 'App\Controllers\Web\AdminController:home')->setName('web.admin.home');
+	});
+});

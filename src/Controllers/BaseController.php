@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Slim\Container;
+use GuzzleHttp\Exception\BadResponseException as GuzzleException;
 
 abstract class BaseController
 {
@@ -44,5 +45,20 @@ abstract class BaseController
 		}
 
 		return $this->response->withHeader('Content-type', 'application/json')->withJson($response, $response['status']);
+	}
+
+	protected function request($method, $url, $options)
+	{
+		try {
+			$client = $this->testing->request($method, $url, $options);
+
+			$data = json_decode($client->getBody()->getContents(), true);
+
+		} catch (GuzzleException $e) {
+			$data['errors'] = json_decode($e->getResponse()->getBody()->getContents(), true);
+
+		}
+
+		return $data;
 	}
 }

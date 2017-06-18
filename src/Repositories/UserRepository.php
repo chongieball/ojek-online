@@ -159,4 +159,11 @@ class UserRepository extends BaseRepository
 
 		return true;
 	}
+
+	public function clear($id)
+	{
+		$user = new User;
+
+		$this->delete($user, 'id', $id, $name = 'hard');
+	}
 }

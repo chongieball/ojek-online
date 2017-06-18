@@ -13,7 +13,7 @@
             {% include 'templates/flash/flash.twig' %}
             <form method="post">
                 <div class="form-group has-feedback {{ errors.token ? 'has-error': '' }}">
-                    <input type="text" class="form-control" placeholder="Your Token" name="token" value="{{ old.token }}">
+                    <input type="text" class="form-control" placeholder="Your Token" name="token">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     {% if errors.token %}
                         <span class="help-block">{{ errors.token | first }}</span>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </form>
-            <a href="{#{ path_for('web.user.login') }#}" class="text-center pull-left">Resend Code</a>
+            <a href="{{ path_for('web.resend.code') }}" class="text-center pull-left">Resend Code</a>
             <a href="{{ path_for('web.login') }}" class="text-center pull-right">To Login Page</a>
             <br>
         </div>
