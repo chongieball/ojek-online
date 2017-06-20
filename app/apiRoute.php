@@ -14,7 +14,7 @@ $app->group('/api', function() use ($app,$container) {
 	$app->get('/renew-password', 'App\Controllers\Api\UserController:getRenewPassword')->setName('api.get.renew.password');
 	$app->put('/renew-password', 'App\Controllers\Api\UserController:putRenewPassword')->setName('api.put.renew.password');
 
-	$app->get('/test', function ($req, $res){
-		var_dump($req->getParams());
-	})->setName('api.test')->add(new \App\Middlewares\Api\AdminMiddleware($container));
+	$app->group('/admin', function() use ($app, $container) {
+		$app->post('/set-price', 'App\Controllers\Api\AdminController:setPricePerKm')->setName('api.set.price');
+	})->add(new \App\Middlewares\Api\AdminMiddleware($container));
 });
