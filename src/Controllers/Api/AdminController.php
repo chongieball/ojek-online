@@ -12,9 +12,11 @@ class AdminController extends \App\Controllers\BaseController
 	{
 		$rules = [
 			'required'	=> [
+				['reg_id']
 				['price'],
 			],
 			'numeric'	=> [
+				['reg_id'],
 				['price'],
 			],
 		];
@@ -23,13 +25,9 @@ class AdminController extends \App\Controllers\BaseController
 
 		if ($this->validator->validate()) {
 			$priceRepo = new PriceRepository;
-			$setPrice = $priceRepo->setPrice($request->getParam('price'));
+			$setPrice = $priceRepo->setPrice($request->getParams());
 
-			if (is_array($setPrice)) {
-				return $this->responseDetail('Errors', 400, $setPrice);
-			} else {
-				return $this->responseDetail('Success Set Price', 201);
-			}
+			return $this->responseDetail('Success Update Price', 200);
 		} else {
 			return $this->responseDetail('Errors', 400, $this->validator->errors());
 		}

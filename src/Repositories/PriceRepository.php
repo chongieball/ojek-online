@@ -6,17 +6,15 @@ use App\Models\Prices\Price;
 
 class PriceRepository extends BaseRepository
 {
-	public function setPrice($price)
+	public function setPrice($data)
 	{
 		$priceModel = new Price;
 
-		$data = [
-			'price'	=> $price,
+		$update = [
+			'price'	=> $data['price'],
 		];
 
-		$setPrice = $priceModel->checkOrCreate($data);
-
-		return $setPrice;
+		$this->update($model, $update, 'id', $data['id']);
 	}
 }
 	

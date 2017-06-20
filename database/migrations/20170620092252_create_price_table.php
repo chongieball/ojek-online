@@ -28,8 +28,10 @@ class CreatePriceTable extends AbstractMigration
     public function change()
     {
         $price = $this->table('price');
-        $price->addColumn('price', 'integer')
+        $price->addColumn('reg_id', 'integer')
+              ->addColumn('price', 'integer')
               ->addColumn('update_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP'])
+              ->addForeignKey('reg_id', 'regional', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
               ->create();
     }
 }
