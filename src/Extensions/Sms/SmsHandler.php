@@ -26,7 +26,7 @@ class SmsHandler
 		return $this;
 	}
 
-	public function message(string $message)
+	public function message($message)
 	{
 		$this->message = $message;
 

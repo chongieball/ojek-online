@@ -5,7 +5,7 @@ use Slim\Middleware\JwtAuthentication;
 
 $whiteListJwt = [];
 
-$container['jwt'] = function (Container $container) {
+$container['jwt'] = function (Container $container) use ($whiteListJwt) {
 	$setting = $container->get('settings')['jwt'];
 	return new JwtAuthentication([
 		'path'			=> '/api',
