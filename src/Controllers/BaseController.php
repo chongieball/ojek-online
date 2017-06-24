@@ -61,4 +61,15 @@ abstract class BaseController
 
 		return $data;
 	}
+
+	protected function decodeJwt()
+	{
+		$getAuth = substr($this->request->getHeader('Authorization')[0], 7);
+
+		$getJwtToken = $this->container->get('settings')['jwt']['token'];
+
+		$token = JWT::decode($getAuth, $getJwtToken, ['HS256']);
+		
+		return $token;
+	}
 }
