@@ -67,11 +67,6 @@ class UserController extends \App\Controllers\BaseController
                         ->message('Please input this code for activate your account '.$register['token'].'. Expire in 5 minutes')
                         ->send();
 
-            if (!$sendSms) {
-                $userRepo->clear($register['id']);
-                return $this->responseDetail("Something Wrong", 500); 
-            }
-
             return $this->responseDetail("Register Success! We'll send you activation code to your number", 201, $register);
         }  else {
             return $this->responseDetail("Error", 400, $this->validator->errors());
