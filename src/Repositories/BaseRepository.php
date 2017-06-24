@@ -73,4 +73,9 @@ abstract class BaseRepository implements RepositoriesInterface
 
 		$model->$delete($column, $value);
 	}
+
+	protected function clear($model, $id)
+	{
+		return $model->delete('id', $id, $name = 'hard');
+	}
 }
