@@ -15,4 +15,8 @@ $app->group('/api', function() use ($app,$container) {
 	$app->put('/renew-password', 'App\Controllers\Api\UserController:putRenewPassword')->setName('api.put.renew.password');
 
 	$app->post('/join-driver', 'App\Controllers\Api\DriverController:becomeDriver')->setName('api.become.driver');
+
+	$app->group('/admin', function() use ($app, $container) {
+		$app->post('/set-price', 'App\Controllers\Api\AdminController:setPricePerKm')->setName('api.set.price');
+	})->add(new \App\Middlewares\Api\AdminMiddleware($container));
 });

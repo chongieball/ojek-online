@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateResultApplicantDriverTable extends AbstractMigration
+class CreateRegionalTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -27,12 +27,8 @@ class CreateResultApplicantDriverTable extends AbstractMigration
      */
     public function change()
     {
-        $result = $this->table('result_applicant_driver');
-        $result->addColumn('app_driver_id', 'integer')
-            ->addColumn('status', 'integer')
-            ->addColumn('reason', 'text', ['null' => true])
-            ->addColumn('create_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
-            ->addForeignKey('app_driver_id', 'applicant_driver', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
-            ->create();
+        $regional = $this->table('regional');
+        $regional->addColumn('name', 'string')
+                 ->create();
     }
 }

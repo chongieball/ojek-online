@@ -17,7 +17,9 @@ class AdminMiddleware extends BaseMiddleware
 
 		$token = JWT::decode($getAuth, $getJwtToken, ['HS256']);
 
-		var_dump($token->data->role_id);
+		if ($token->data->role != 1) {
+			return $response->withJson('Not Authenticated', 401);
+		}
 
 		$response = $next($request, $response);
 		
