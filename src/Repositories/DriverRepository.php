@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Models\Drivers\ApplicantDriver;
 use App\Models\Drivers\FileApplicantDriver;
 use App\Models\Drivers\ResultApplicantDriver;
+use App\Models\Users\UserRole;
+use App\Models\Users\User;
 
 class DriverRepository extends BaseRepository
 {
@@ -44,5 +46,42 @@ class DriverRepository extends BaseRepository
 		$appDriver = new ApplicantDriver;
 		
 		return $appDriver->showApplicant($page, $limit);
+	}
+
+	public function resultApplicantDriver($data)
+	{
+		$appDriver = new ApplicantDriver;
+		$applicant = $this->findBy($appDriver, 'id', $data['app_driver_id']);
+
+		$result = new ResultApplicantDriver;
+		$setResult = $this->create($result, $data);
+		$getResult = $this->findBy($setResult, 'id', $setResult);
+
+		if ($data['status'] == 1) {
+			$this->setToDriver($applicant['user_id']);
+		}
+
+		$dataDriver = $this->getDataDriver($applicant['user_id']);
+
+		$getResult['email'] = $dataDriver['email'];
+		$getResult['name'] = $dataDriver['name'];
+
+		$getResult['applicant_created'] = $applicant['create_at'];
+
+		return $getResult;
+	}
+
+	private function setToDriver($userId)
+	{
+		$userRole = new UserRole;
+		$setDriver = $this->update($userRole, ['role_id' => 2], 'user_id', $userId);
+	}
+
+	private function getDataDriver($userId)
+	{
+		$user = new User;
+		$findUser = $this->findBy($user, 'id', $userId);
+
+		return $findUser
 	}
 }

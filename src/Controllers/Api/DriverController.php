@@ -56,4 +56,16 @@ class DriverController extends \App\Controllers\BaseController
 			return $this->responseDetail('Data Available', 200, $showApplicant);
 		}
 	}
+
+	public function setResultApplicantDriver(Request $request, Response $response)
+	{
+		$driverRepo = new \App\Repositories\DriverRepository;
+
+		$setResult = $driverRepo->resultApplicantDriver($request->getParams());
+
+		$this->mailer->send('templates/mailer/result_applicant_driver.twig', ['user' => $setResult], function($message) use ($setResult) {
+                        $message->to($setResult['email_driver']);
+                        $message->subject('Result From Your Applicant');
+                });
+	}
 }
