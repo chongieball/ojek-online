@@ -9,7 +9,7 @@ class UserController extends \App\Controllers\BaseController
 {
     public function home(Request $request, Response $response)
     {
-        echo "user home";
+        return $this->view->render($response, 'home.twig');
     }
 
 	public function getRegister(Request $request, Response $response)
@@ -178,9 +178,9 @@ class UserController extends \App\Controllers\BaseController
 
     private function checkRoleAndRedirect()
     {
-        if ($_SESSION['login']['role'] === 1) {
+        if ($_SESSION['login']['role'] == 1) {
             return $this->response->withRedirect($this->router->pathFor('web.admin.home'));
-        } elseif ($_SESSION['login']['role'] === 2) {
+        } elseif ($_SESSION['login']['role'] == 2) {
             return $this->response->withRedirect($this->router->pathFor('web.driver.home'));
         } else {
             return $this->response->withRedirect($this->router->pathFor('web.home'));

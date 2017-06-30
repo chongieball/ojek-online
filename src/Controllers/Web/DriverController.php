@@ -9,6 +9,6 @@ class DriverController extends \App\Controllers\BaseController
 {
 	public function home(Request $request, Response $response)
 	{
-		echo "driver home";
+		return $this->view->render($response, 'drivers/home.twig');
 	}
 }

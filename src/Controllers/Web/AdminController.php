@@ -9,6 +9,6 @@ class AdminController extends \App\Controllers\BaseController
 {
 	public function home(Request $request, Response $response)
 	{
-		echo "admin home";
+		return $this->view->render($response, 'admin/home.twig');
 	}
 }

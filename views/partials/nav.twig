@@ -1,0 +1,29 @@
+<div class="wrapper">
+    <header class="main-header">
+        <nav class="navbar navbar-static-top">
+            <div class="container">
+                <div class="navbar-header pull-left">
+                    <a href="{{ path_for('web.home') }}">
+                        <img src="http://www.besthomecaremn.com/wp-content/uploads/2016/03/question-mark.svg" class="navbar-brand" alt="Logo">
+                    </a>
+                </div>
+                <div class="navbar-custom-menu pull-right">
+                    <ul class="nav navbar-nav">
+                        {% if login.role == 1 %}
+                            <li><a href="{{path_for('web.admin.home')}}">To Admin Dashboard</a></li>
+                        {% elseif login.role == 2 %}
+                            <li><a href="{{path_for('web.driver.home')}}">To Driver Dashboard</a></li>
+                        {% endif %}
+                        {% if login %}
+                            <li><a href="#{#{ path_for('web.user.my.account') }#}">Your Account</a></li>
+                            <li><a href="{{ path_for('web.logout') }}">Sign  Out</a></li>
+                        {% else %}
+                            <li><a href="{{ path_for('web.login') }}">Sign In</a></li>
+                            <li><a href="{{ path_for('web.register') }}">Get an Account</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>  
+    </header>
+</div>
