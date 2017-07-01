@@ -1,0 +1,16 @@
+{% extends 'templates/mailer/template.twig' %}
+{% block content %}
+	<div class="row">
+	    <p>
+	    	Based on your submission on {{data.user.applicant_created|date('D, F d Y')}} . Your applicant is <br>
+	    	{% if data.user.status == 0 %}
+			REJECTED <br>
+			Reason : {{data.user.reason}} . <br>
+			Please Re-Apply your submission minimun in 3 days. Thank You.
+			{% else %}
+			ACCEPTED <br>
+			You are now driver, if you are logged in, please relog for use driver feature. Thank you
+	    	{% endif %}
+	    </p>
+	</div> 
+{% endblock %}

@@ -7,3 +7,5 @@ behat.yml
 docker-compose.yml
 public/upload/images/*
 !public/upload/images/default_user.png
+public/upload/file_drivers/*
+!public/upload/file_drivers/examplefile

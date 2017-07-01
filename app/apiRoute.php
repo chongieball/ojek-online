@@ -14,7 +14,13 @@ $app->group('/api', function() use ($app,$container) {
 	$app->get('/renew-password', 'App\Controllers\Api\UserController:getRenewPassword')->setName('api.get.renew.password');
 	$app->put('/renew-password', 'App\Controllers\Api\UserController:putRenewPassword')->setName('api.put.renew.password');
 
+	$app->post('/join-driver', 'App\Controllers\Api\DriverController:becomeDriver')->setName('api.become.driver');
+
 	$app->group('/admin', function() use ($app, $container) {
 		$app->post('/set-price', 'App\Controllers\Api\AdminController:setPricePerKm')->setName('api.set.price');
+
+		$app->get('/applicant-driver', 'App\Controllers\Api\DriverController:showApplicantDriver')->setName('api.show.applicant.driver');
+
+		$app->post('/result-applicant-driver')->setName('api.set.result.applicant.driver');
 	})->add(new \App\Middlewares\Api\AdminMiddleware($container));
 });
