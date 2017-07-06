@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Slim\Container;
 use GuzzleHttp\Exception\BadResponseException as GuzzleException;
+use Firebase\JWT\JWT;
 
 abstract class BaseController
 {
@@ -69,7 +70,7 @@ abstract class BaseController
 		$getJwtToken = $this->container->get('settings')['jwt']['token'];
 
 		$token = JWT::decode($getAuth, $getJwtToken, ['HS256']);
-		
+
 		return $token;
 	}
 }
