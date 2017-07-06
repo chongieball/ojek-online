@@ -32,7 +32,7 @@ class CreateTableRestaurant extends AbstractMigration
               ->addColumn('name', 'string')
               ->addColumn('address', 'text')
               ->addColumn('phone', 'string')
-              ->addColumn('photo', 'text', ['default' => 'http://vectorpage.com/uploads/2013/09/Cartoon-restaurant-vector-6.jpg', 'null' => true])
+              ->addColumn('photo', 'string', ['default' => 'http://vectorpage.com/uploads/2013/09/Cartoon-restaurant-vector-6.jpg'])
               ->addColumn('create_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
               ->addColumn('update_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP'])
               ->addForeignKey('user_id', 'users', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])

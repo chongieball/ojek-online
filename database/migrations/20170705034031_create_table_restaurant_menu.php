@@ -31,7 +31,7 @@ class CreateTableRestaurantMenu extends AbstractMigration
         $menu->addColumn('resto_id', 'integer')
              ->addColumn('name', 'string')
              ->addColumn('price', 'integer')
-             ->addColumn('photo', 'text', ['default' => 'https://maxcdn.icons8.com/Share/icon/color/City//restaurant_menu1600.png'])
+             ->addColumn('photo', 'string', ['default' => 'https://maxcdn.icons8.com/Share/icon/color/City//restaurant_menu1600.png'])
              ->addColumn('deleted', 'integer', ['default' => 0])
              ->addForeignKey('resto_id', 'restaurant', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
              ->create();
