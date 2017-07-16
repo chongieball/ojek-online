@@ -1,0 +1,15 @@
+{% extends 'templates/mailer/template.twig' %}
+{% block content %}
+	<div class="row">
+	    <p>
+	    	Based on your submission on {{data.user.applicant_created|date('D, F d Y')}} . Your restaurant applicant is <br>
+	    	{% if data.user.status == 0 %}
+			REJECTED <br>
+			Reason : {{data.user.reason}} . <br>
+			{% else %}
+			ACCEPTED <br>
+			Your Restaurant is joined with us. Congratulations!
+	    	{% endif %}
+	    </p>
+	</div> 
+{% endblock %}

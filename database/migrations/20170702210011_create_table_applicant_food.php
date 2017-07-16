@@ -28,12 +28,12 @@ class CreateTableApplicantFood extends AbstractMigration
     public function change()
     {
         $appFood = $this->table('applicant_food');
-        $appFood->addColumn('applicant_id', 'integer')
+        $appFood->addColumn('user_id', 'integer')
                 ->addColumn('name', 'string')
                 ->addColumn('address', 'text')
                 ->addColumn('phone', 'string')
                 ->addColumn('create_at', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
-                ->addForeignKey('applicant_id', 'users', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
+                ->addForeignKey('user_id', 'users', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
                 ->create();
     }
 }
